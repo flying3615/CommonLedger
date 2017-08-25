@@ -19,12 +19,12 @@
         </th>
         <g:each in="${queryResp}" status="i" var="account">
             <tr class="${(i%2)==0?'even':'odd'}">
-                <td>${account.Id}</td>
-                <td>${account.FullyQualifiedName}</td>
-                <td>${account.AccountType}</td>
-                <td>${account.CurrentBalance}</td>
-                <td>${account.AccountSubType}</td>
-                <td>${account.Active}</td>
+                <td>${account?.Id}</td>
+                <td>${account?.FullyQualifiedName}</td>
+                <td>${account?.AccountType}</td>
+                <td>${account?.CurrentBalance}</td>
+                <td>${account?.AccountSubType}</td>
+                <td>${account?.Active}</td>
             </tr>
         </g:each>
     </table>

@@ -1,6 +1,6 @@
 package commonledger
 
-class AccountController {
+class OAuth2Controller {
 
 
     def httpHelper
