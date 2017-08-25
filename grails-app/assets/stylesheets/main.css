@@ -84,7 +84,7 @@ img {
 }
 
 .footer {
-    background: #48802c;
+    /*background: #48802c;*/
     color: #000;
     clear: both;
     font-size: 0.8em;
@@ -125,6 +125,7 @@ img {
     float: left;
     list-style-type: none;
     margin-right: 0.5em;
+    margin-top: 10px;
     padding: 0;
 }
 
@@ -571,4 +572,8 @@ a.skip {
 img.grails-logo {
     height:340px;
     margin-top:-10px;
+}
+
+body > div.navbar.navbar-default.navbar-static-top > div > div.navbar-header > a{
+    height: 75px;
 }

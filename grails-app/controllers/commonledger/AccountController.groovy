@@ -20,7 +20,7 @@ class AccountController {
         session.auth_code = null
         session.access_token = null
         session.refresh_token = null
-        redirect (uri: '/account')
+        redirect (uri: '/')
     }
 
 

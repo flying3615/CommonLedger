@@ -11,6 +11,8 @@
     <asset:stylesheet src="application.css"/>
 
     <g:layoutHead/>
+
+
 </head>
 <body>
 
@@ -24,21 +26,25 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="/#">
-                    <i class="fa grails-icon">
-                        <asset:image src="grails-cupsonly-logo-white.svg"/>
-                    </i> Grails
+                        <asset:image src="commonledger.png"/>
                 </a>
             </div>
             <div class="navbar-collapse collapse" aria-expanded="false" style="height: 0.8px;">
                 <ul class="nav navbar-nav navbar-right">
-                    <g:pageProperty name="page.nav" />
+                    <li>
+                        <a href="/account/connect" role="button" aria-haspopup="true" aria-expanded="false">Connect</a>
+                    </li>
+                    <li>
+                        <a href="/account/disconnect" role="button" aria-haspopup="true"
+                           aria-expanded="false">Disconnect</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
-
-    <g:layoutBody/>
-
+    <div class="container">
+        <g:layoutBody/>
+    </div>
     <div class="footer" role="contentinfo"></div>
 
     <div id="spinner" class="spinner" style="display:none;">

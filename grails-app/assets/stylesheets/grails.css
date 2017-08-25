@@ -35,16 +35,16 @@ pre {
     margin: 10px;
 }
 .navbar-default a {
-    color: #ffffff !important;
+    color: black !important;
     font-size: 18px !important;
     text-decoration: none;
 }
 .grails-icon img {
-    width: 40px;
+    width: 140px;
 
 }
 .navbar-default, .navbar-static-top {
-    background-color: #4D8618;
+    background-color: #eeeeee;
     border: 0px;
 }
 a.navbar-brand {
