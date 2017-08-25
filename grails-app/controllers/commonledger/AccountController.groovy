@@ -30,10 +30,15 @@ class AccountController {
             session.realmId = params.realmId
             session.auth_code = params.code
 
-            def (String access_token,String refresh_token) = httpHelper.retrieveBearerTokens(params.code)
+            Tuple2 tokens = httpHelper.retrieveBearerTokens(params.code)
+            if(tokens==null)render view:'oauth2redirect',model:[message:'Cannot get token']
+
+            def (String access_token,String refresh_token) = tokens
 
             session.access_token = access_token
             session.refresh_token = refresh_token
+        }else{
+            render view:'oauth2redirect',model:[message:'CSRF Wrong']
         }
         redirect(controller:'company',action:'index')
     }
