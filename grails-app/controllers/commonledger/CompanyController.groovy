@@ -11,14 +11,12 @@ class CompanyController {
     def oAuth2Configuration
     def httpHelper
     CompanyService companyService
-    HttpClient CLIENT = HttpClientBuilder.create().build();
+    HttpClient CLIENT = HttpClientBuilder.create().build()
 
     def index() {}
 
     def list() {
-//        String companyInfoEndpoint = String.format("%s/v3/company/%s/companyinfo/%s", oAuth2Configuration.accountingAPI, session.realmId, session.realmId)
         String companyInfoEndpoint = String.format("%s/v3/company/%s/query?query=%s", oAuth2Configuration.accountingAPI, session.realmId, URLEncoder.encode("Select * From Account"))
-        println companyInfoEndpoint
         HttpGet companyInfoReq = new HttpGet(companyInfoEndpoint)
 
         companyInfoReq.setHeader("Accept", "application/json")
@@ -33,6 +31,6 @@ class CompanyController {
             return new JSONObject().put("response","Failed").toString()
         }
 
-        render httpHelper.convertResponseToJSON(response)
+        render view:'list',model:[queryResp:httpHelper.convertResponseToJSON(response).getJSONObject("QueryResponse").getJSONArray("Account")]
     }
 }
