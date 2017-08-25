@@ -1,37 +1,24 @@
-import com.fasterxml.jackson.databind.ObjectMapper
-import grails.converters.JSON
+import groovyx.net.http.RESTClient
 import org.apache.http.HttpResponse
-import org.apache.http.NameValuePair
-import org.apache.http.client.entity.UrlEncodedFormEntity
-import org.apache.http.client.methods.HttpPost
-import org.apache.http.impl.client.HttpClientBuilder
-import org.apache.http.message.BasicNameValuePair
 import org.apache.tomcat.util.codec.binary.Base64
 import org.grails.web.json.JSONObject
+
+import java.lang.reflect.Method
+
+import static groovyx.net.http.ContentType.URLENC
 
 class HttpHelper {
 
     OAuth2Configuration oAuth2Configuration
 
-    def addHeader(post){
-        def base64ClientIdSec = Base64.encodeBase64String(
-                (oAuth2Configuration.clientID
-                        + ":" +
-                        oAuth2Configuration.clientSecret).getBytes())
-        post.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8")
-        post.setHeader("Authorization", "Basic " + base64ClientIdSec)
-        post.setHeader("Accept", "application/json")
-        return post
-    }
+    final RESTClient CLIENT = new RESTClient()
 
+    def makeUrl(String scope, String csrfToken) {
 
-    def makeUrl(String scope,String csrfToken){
-        try {
-            def discoveryDocumentReq = new URL(oAuth2Configuration.discoveryAPI)
-
-            JSONObject respJSON = JSON.parse(discoveryDocumentReq.newReader())
-            oAuth2Configuration.authEndPoint = respJSON.authorization_endpoint
-            oAuth2Configuration.tokenEndPoint = respJSON.token_endpoint
+        def response = CLIENT.get(uri: oAuth2Configuration.discoveryAPI)
+        if (response.status == 200) {
+            oAuth2Configuration.authEndPoint = response.data.authorization_endpoint
+            oAuth2Configuration.tokenEndPoint = response.data.token_endpoint
 
             def url = "${oAuth2Configuration.authEndPoint}?" +
                     "client_id=${oAuth2Configuration.clientID}" +
@@ -40,50 +27,44 @@ class HttpHelper {
                     "&state=$csrfToken"
 
             return url
-        } catch (UnsupportedEncodingException e) {
-            println("Exception while preparing url for redirect ", e)
+        } else {
+            println "Cannot get discovery api"
         }
-        return null
     }
 
-    def getCSRFToken(){
+    def getCSRFToken() {
         def csrfToken = UUID.randomUUID().toString()
         return csrfToken
     }
 
 
     def retrieveBearerTokens(String auth_code) {
-        def post = new HttpPost(oAuth2Configuration.tokenEndPoint)
-        List<NameValuePair> urlParameters = new ArrayList<>()
-        urlParameters.add(new BasicNameValuePair("code", auth_code))
-        urlParameters.add(new BasicNameValuePair("redirect_uri", oAuth2Configuration.redirectUri))
-        urlParameters.add(new BasicNameValuePair("grant_type", "authorization_code"))
-        post = this.addHeader(post)
-        post.setEntity(new UrlEncodedFormEntity(urlParameters))
-        HttpResponse response = HttpClientBuilder.create().build().execute(post)
+        def base64ClientIdSec = Base64.encodeBase64String((oAuth2Configuration.clientID + ":" + oAuth2Configuration.clientSecret).getBytes())
+        def response = CLIENT.post(
+                uri: oAuth2Configuration.tokenEndPoint,
+                body: [
+                        code        : auth_code,
+                        redirect_uri: oAuth2Configuration.redirectUri,
+                        grant_type  : "authorization_code"
+                ],
+                headers: [
+                        "Authorization": "Basic ${base64ClientIdSec}",
+                        "Accept"       : "application/json"
+                ],
+                requestContentType: URLENC
 
-        if (response.getStatusLine().getStatusCode() != 200) {
-            println("failed getting access token")
-            return null
+        )
+
+
+        if (response.status == 200) {
+            String access_token = response.data.access_token
+            String refresh_token = response.data.refresh_token
+            return [access_token, refresh_token]
         }
-        JSONObject jsonObject = convertResponseToJSON(response)
-        println("Response Json $jsonObject")
+        return null
 
-        String access_token = jsonObject.getString("access_token")
-        String refresh_token = jsonObject.getString("refresh_token")
 
-        return [access_token,refresh_token]
     }
 
-
-    def convertResponseToJSON(HttpResponse response){
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
-        StringBuffer result = new StringBuffer()
-        String line
-        while ((line = rd.readLine()) != null) {
-            result.append(line)
-        }
-        return new JSONObject(result.toString())
-    }
 
 }

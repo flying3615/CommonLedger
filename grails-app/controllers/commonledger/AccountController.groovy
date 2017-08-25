@@ -6,9 +6,9 @@ class AccountController {
     def httpHelper
     def oAuth2Configuration
 
-    def index() {
-        println("index view!!!")
-    }
+//    def index() {
+//        println("index view!!!")
+//    }
 
     def connect() {
         session.csrfToken = httpHelper.getCSRFToken()
