@@ -4,8 +4,11 @@ import com.intuit.ipp.data.Account
 import com.intuit.ipp.data.AccountTypeEnum
 import grails.transaction.Transactional
 import groovyx.net.http.RESTClient
-
-import static groovyx.net.http.ContentType.*
+import org.apache.http.HttpResponse
+import org.apache.http.client.HttpClient
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.entity.StringEntity
+import org.apache.http.impl.client.HttpClientBuilder
 
 @Transactional
 class CompanyService {
@@ -21,8 +24,7 @@ class CompanyService {
             def response = CLIENT.get(
                     uri: companyInfoEndpoint,
                     headers: [
-                            Accept         : "application/json",
-                            Authorization  : "Bearer ${accessToken}"
+                            Authorization: "Bearer ${accessToken}"
                     ]
             )
 
@@ -38,6 +40,17 @@ class CompanyService {
             return [error: true, message: ex.toString()]
         }
 
+    }
+
+
+    def getResult(HttpResponse response) throws IOException {
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
+        StringBuffer result = new StringBuffer()
+        String line = ""
+        while ((line = rd.readLine()) != null) {
+            result.append(line)
+        }
+        return result
     }
 
     /**
@@ -57,7 +70,8 @@ class CompanyService {
      "Id": "33",
      "SyncToken": "0",
      "MetaData": {"CreateTime": "2014-09-12T10:12:02-07:00",
-     "LastUpdatedTime": "2015-06-30T15:09:07-07:00"}}* @param account
+     "LastUpdatedTime": "2015-06-30T15:09:07-07:00"}}
+     * @param account
      * @param realmId
      * @param accessToken
      * @return
@@ -72,39 +86,41 @@ class CompanyService {
         def accType = account.accountType.value()
         def active = account.active
 
+        println("$id, $name, $accountSubType, $currentBalance, $accType, $active ")
+        HttpClient CLIENT = HttpClientBuilder.create().build()
         def response
         if (account.id) {
-            def updateEndpoint = "${oAuth2Configuration.accountingAPI}/v3/company/${realmId}/account?operation=update"
-            println(updateEndpoint)
-            response = CLIENT.post(
-                    uri: updateEndpoint,
-                    headers: [
-                            Accept         : "application/json",
-                            Authorization  : "Bearer ${accessToken}"
-                    ],
-                    body: [
-                            Id            : id,
-                            Name          : name,
-                            AccountType   : accType,
-                            Active        : active,
-                            AccountSubType: accountSubType,
-                            CurrentBalance: currentBalance,
-                            SyncToken: 0
-                    ],
+            String json = '{"Name": "'+name+'","Active": "'+active+'","AccountSubType": "'+accountSubType+'","sparse": true,"Id": "'+id+'","SyncToken": "0","AccountType": "'+accType+'","CurrentBalance": '+currentBalance+'}'
+            StringEntity entity = new StringEntity(json)
+            def updateEndpoint = "${oAuth2Configuration.accountingAPI}/v3/company/${realmId}/account?operation=update&minorversion=4"
+            HttpPost httpPost = new HttpPost(updateEndpoint)
+            httpPost.setEntity(entity)
+            httpPost.setHeader("Accept", "application/json")
+            httpPost.setHeader("Content-type", "application/json")
+            httpPost.setHeader("Authorization", "Bearer ${accessToken}")
+            response = CLIENT.execute(httpPost)
+            println getResult(response)
 
-                    requestContentType: JSON
-            )
-
-            println "after update"
         } else {
             //save
+            String json = '{"Name": "'+name+'","Active": "'+active+'","AccountSubType": "'+accountSubType+'","AccountType": "'+accType+'","CurrentBalance": '+currentBalance+'}'
+            StringEntity entity = new StringEntity(json)
+            def saveEndpoint = "${oAuth2Configuration.accountingAPI}/v3/company/${realmId}/account"
+            HttpPost httpPost = new HttpPost(saveEndpoint)
+            httpPost.setEntity(entity)
+            httpPost.setHeader("Accept", "application/json")
+            httpPost.setHeader("Content-type", "application/json")
+            httpPost.setHeader("Authorization", "Bearer ${accessToken}")
+            response = CLIENT.execute(httpPost)
+            println getResult(response)
+
             println "after save"
-
         }
-
-        if(response.status==200){
+        if (response.getStatusLine().getStatusCode() == 200) {
+            println "update save success"
             return true
-        }else{
+        } else {
+            println "update save failed"
             return false
         }
 
