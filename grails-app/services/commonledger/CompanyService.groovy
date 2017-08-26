@@ -5,6 +5,8 @@ import com.intuit.ipp.data.AccountTypeEnum
 import grails.transaction.Transactional
 import groovyx.net.http.RESTClient
 
+import static groovyx.net.http.ContentType.*
+
 @Transactional
 class CompanyService {
 
@@ -20,7 +22,7 @@ class CompanyService {
                     uri: companyInfoEndpoint,
                     headers: [
                             Accept         : "application/json",
-                            "Authorization": "Bearer ${accessToken}"
+                            Authorization  : "Bearer ${accessToken}"
                     ]
             )
 
@@ -38,13 +40,72 @@ class CompanyService {
 
     }
 
+    /**
+     * Account Body
+     *{"Name": "Accounts Payable (A/P)",
+     "SubAccount": false,
+     "FullyQualifiedName": "Accounts Payable (A/P)",
+     "Active": true,
+     "Classification": "Liability",
+     "Description": "Description added during update.",
+     "AccountType": "Accounts Payable",
+     "AccountSubType": "AccountsPayable",
+     "CurrentBalance": -1091.23,
+     "CurrentBalanceWithSubAccounts": -1091.23,
+     "domain": "QBO",
+     "sparse": false,
+     "Id": "33",
+     "SyncToken": "0",
+     "MetaData": {"CreateTime": "2014-09-12T10:12:02-07:00",
+     "LastUpdatedTime": "2015-06-30T15:09:07-07:00"}}* @param account
+     * @param realmId
+     * @param accessToken
+     * @return
+     */
 
     def saveOrUpdateAccount(Account account, String realmId, String accessToken) {
 
+        def id = account.id
+        def name = account.name
+        def accountSubType = account.accountSubType
+        def currentBalance = account.currentBalance
+        def accType = account.accountType.value()
+        def active = account.active
+
+        def response
         if (account.id) {
-            //update
+            def updateEndpoint = "${oAuth2Configuration.accountingAPI}/v3/company/${realmId}/account?operation=update"
+            println(updateEndpoint)
+            response = CLIENT.post(
+                    uri: updateEndpoint,
+                    headers: [
+                            Accept         : "application/json",
+                            Authorization  : "Bearer ${accessToken}"
+                    ],
+                    body: [
+                            Id            : id,
+                            Name          : name,
+                            AccountType   : accType,
+                            Active        : active,
+                            AccountSubType: accountSubType,
+                            CurrentBalance: currentBalance,
+                            SyncToken: 0
+                    ],
+
+                    requestContentType: JSON
+            )
+
+            println "after update"
         } else {
             //save
+            println "after save"
+
+        }
+
+        if(response.status==200){
+            return true
+        }else{
+            return false
         }
 
     }

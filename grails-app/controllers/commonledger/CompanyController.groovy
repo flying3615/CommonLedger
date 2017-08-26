@@ -33,7 +33,6 @@ class CompanyController {
     }
 
     def saveOrUpdateAccount() {
-        println params
         Account account = new Account()
         account.id = params.id
         account.accountType = AccountTypeEnum.fromValue(params.accType)

@@ -1,5 +1,9 @@
 <!doctype html>
 <html>
+<head>
+    <title>Account Form</title>
+    <meta name="layout" content="main">
+</head>
 <body>
 <div class="container">
     <g:if test="${error}">
@@ -10,7 +14,7 @@
 
 
     <g:form name="accountForm" url="[controller: 'company', action: 'saveOrUpdateAccount']">
-    <g:hiddenField name="Id" value="${account?.id}"/>
+    <g:hiddenField name="id" value="${account?.id}"/>
 
     <div class="form-group">
         <label for="accName">Account Name</label>
@@ -48,8 +52,5 @@
 
 </body>
 
-<head>
-    <title>Page Not Found</title>
-    <meta name="layout" content="main">
-</head>
+
 </html>
