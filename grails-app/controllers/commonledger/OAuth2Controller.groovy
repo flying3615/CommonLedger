@@ -6,9 +6,10 @@ class OAuth2Controller {
     def httpHelper
     def oAuth2Configuration
 
-//    def index() {
-//        println("index view!!!")
-//    }
+    def index() {
+        println "redirect to connect"
+//        redirect(uri:'connect')
+    }
 
     def connect() {
         session.csrfToken = httpHelper.getCSRFToken()

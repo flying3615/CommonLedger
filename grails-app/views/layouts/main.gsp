@@ -31,13 +31,17 @@
             </div>
             <div class="navbar-collapse collapse" aria-expanded="false" style="height: 0.8px;">
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a class="${session.access_token?"disabled":""}" href="/OAuth2/connect" role="button" aria-haspopup="true" aria-expanded="false">Connect</a>
-                    </li>
-                    <li>
-                        <a class="${session.access_token?"":"disabled"}" href="/OAuth2/disconnect" role="button" aria-haspopup="true"
-                           aria-expanded="false">Disconnect</a>
-                    </li>
+                    <g:if test="${session.access_token}">
+                        <li>
+                            <a href="/OAuth2/disconnect" role="button" aria-haspopup="true"
+                               aria-expanded="false">Disconnect</a>
+                        </li>
+                    </g:if>
+                    <g:else>
+                        <li>
+                            <a href="/OAuth2/connect" role="button" aria-haspopup="true" aria-expanded="false">Connect</a>
+                        </li>
+                    </g:else>
                 </ul>
             </div>
         </div>

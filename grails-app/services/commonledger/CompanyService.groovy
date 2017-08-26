@@ -1,6 +1,6 @@
 package commonledger
 
-import grails.converters.JSON
+import com.intuit.ipp.data.Account
 import grails.transaction.Transactional
 import groovyx.net.http.RESTClient
 
@@ -11,7 +11,7 @@ class CompanyService {
     def oAuth2Configuration
 
 
-    def listQuery(String query, String realmId, String accessToken) {
+    def query(String query, String realmId, String accessToken) {
 
         try {
             def companyInfoEndpoint = String.format("%s/v3/company/%s/query?query=%s", oAuth2Configuration.accountingAPI, realmId, URLEncoder.encode(query))
@@ -36,4 +36,21 @@ class CompanyService {
         }
 
     }
+
+
+    def saveOrUpdateAccount(Account account,String realmId, String accessToken){
+
+        if(account.id){
+            //update
+        }else{
+            //save
+        }
+
+    }
+
+    def getAccount(String accountID,String realmId, String accessToken){
+
+    }
+
+
 }

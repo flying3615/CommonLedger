@@ -8,7 +8,8 @@
 <div class="col-md-4 col-md-offset-4">
     <h1>form</h1>
     <a href="/company/list">list accounts</a>
+
+    <a href="/company/accountForm">New Account</a>
 </div>
 </body>
 </html>
-
