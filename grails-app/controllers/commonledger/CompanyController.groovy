@@ -13,28 +13,29 @@ class CompanyController {
 
     def list() {
         def queryResult = companyService.query("Select * From Account", session.realmId, session.access_token)
-        if(!queryResult.error){
+        if (!queryResult.error) {
             render view: 'list', model: [queryResp: queryResult.message?.Account]
-        }else{
-            render view: 'error', model: [message:queryResult.message]
+        } else {
+            render view: 'error', model: [message: queryResult.message]
         }
     }
 
-    def accountForm(){
+    def accountForm() {
+        Account account
+        if (params.id) {
+            account = companyService.getAccount(params.id, session.realmId, session.access_token)
 
-        Account account = new Account()
-        account.setName("Ba" + RandomStringUtils.randomAlphanumeric(7))
-        account.setSubAccount(false)
-        account.setFullyQualifiedName(account.getName())
-        account.setActive(true)
-        account.setClassification(AccountClassificationEnum.ASSET)
-        account.setAccountType(AccountTypeEnum.BANK)
-        account.setCurrentBalance(new BigDecimal("0"))
-        account.setCurrentBalanceWithSubAccounts(new BigDecimal("0"))
-        account.setTxnLocationType("FranceOverseas")
-        account.setAcctNum("B" + RandomStringUtils.randomAlphanumeric(6))
+        } else {
+            account = new Account()
+        }
 
-        render view:'accountForm', model: [account:account]
+        render view: 'accountForm', model: [account: account]
+    }
+
+    def saveOrUpdateAccount() {
+        println params
+        //http client save or update
+        redirect(action: 'list')
     }
 
 }

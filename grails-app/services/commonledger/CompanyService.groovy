@@ -1,6 +1,7 @@
 package commonledger
 
 import com.intuit.ipp.data.Account
+import com.intuit.ipp.data.AccountTypeEnum
 import grails.transaction.Transactional
 import groovyx.net.http.RESTClient
 
@@ -38,17 +39,34 @@ class CompanyService {
     }
 
 
-    def saveOrUpdateAccount(Account account,String realmId, String accessToken){
+    def saveOrUpdateAccount(Account account, String realmId, String accessToken) {
 
-        if(account.id){
+        if (account.id) {
             //update
-        }else{
+        } else {
             //save
         }
 
     }
 
-    def getAccount(String accountID,String realmId, String accessToken){
+    def getAccount(String accountID, String realmId, String accessToken) {
+        Account account = new Account()
+        def accountEndPoint = "${oAuth2Configuration.accountingAPI}/v3/company/${realmId}/account/${accountID}"
+        def response = CLIENT.get(
+                uri: accountEndPoint,
+                headers: [
+                        Accept         : "application/json",
+                        "Authorization": "Bearer ${accessToken}"
+                ]
+        )
+        def accountJSON = response.data.Account
+        account.id = accountJSON.id
+        account.name = accountJSON.Name
+        account.active = accountJSON.Active
+        account.accountType = AccountTypeEnum.fromValue(accountJSON.AccountType)
+        account.currentBalance = accountJSON.CurrentBalance
+        account.accountSubType = accountJSON.AccountSubType
+        return account
 
     }
 
