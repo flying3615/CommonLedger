@@ -60,7 +60,7 @@ class CompanyService {
                 ]
         )
         def accountJSON = response.data.Account
-        account.id = accountJSON.id
+        account.id = accountJSON.Id
         account.name = accountJSON.Name
         account.active = accountJSON.Active
         account.accountType = AccountTypeEnum.fromValue(accountJSON.AccountType)
