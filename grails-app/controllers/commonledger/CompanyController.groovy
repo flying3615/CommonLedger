@@ -9,11 +9,7 @@ class CompanyController {
 
     CompanyService companyService
 
-    def index() {
-        if(!session.access_token){
-            redirect(controller:'OAuth2',action: 'connect')
-        }
-    }
+    def index() {}
 
     def list() {
         def queryStr = params.query ?: "select * from account"
