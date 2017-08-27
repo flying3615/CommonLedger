@@ -129,6 +129,6 @@ intuit:
     discoveryAPI: https://developer.api.intuit.com/.well-known/openid_sandbox_configuration/
     OAuth2AppClientId: Q0i8LOJgGM9XozHdzPPZ1FqISmnk1a4UvKjIZdBu5x7bZlg8EL
     OAuth2AppClientSecret: kGg0zTNf3mdTdh20PPRkrErHVgTa4K1Dpi32rwVo
-    OAuth2AppRedirectUri: http://localhost:8080/OAuth2/oauth2redirect
+    OAuth2AppRedirectUri: http://ec2-54-252-227-120.ap-southeast-2.compute.amazonaws.com:8080/OAuth2/oauth2redirect
     c2qbScope: com.intuit.quickbooks.accounting
     IntuitAccountingAPIHost: https://sandbox-quickbooks.api.intuit.com

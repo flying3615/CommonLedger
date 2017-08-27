@@ -9,10 +9,13 @@ class CompanyController {
 
     CompanyService companyService
 
-    def index() {}
+    def index() {
+        if(!session.access_token){
+            redirect(controller:'OAuth2',action: 'connect')
+        }
+    }
 
     def list() {
-
         def queryStr = params.query ?: "select * from account"
         def queryResult = companyService.query(queryStr, session.realmId, session.access_token)
         if (!queryResult.error) {
