@@ -12,7 +12,7 @@ class CompanyController {
     def index() {}
 
     def list() {
-        def queryResult = companyService.query("Select * From Account", session.realmId, session.access_token)
+        def queryResult = companyService.query(params.query, session.realmId, session.access_token)
         if (!queryResult.error) {
             render view: 'list', model: [queryResp: queryResult.message?.Account]
         } else {
@@ -23,7 +23,6 @@ class CompanyController {
     def accountForm() {
         Account account
         if (params.id) {
-            //don't submit to itself, in case another http request
             account = companyService.getAccount(params.id, session.realmId, session.access_token)
         } else {
             account = new Account()
@@ -45,6 +44,7 @@ class CompanyController {
 
         String error_message = ""
         try{
+            //check balance format
             account.currentBalance = new BigDecimal(params.currentBalance)
         }catch (e){
             error_message = "Balance is no number ${e}"
@@ -55,7 +55,7 @@ class CompanyController {
                 it.value()
             }, activeList: [true, false], error: error_message])
         } else {
-            def success = companyService.saveOrUpdateAccount(account, session.realmId, session.access_token)
+            def (success,message) = companyService.saveOrUpdateAccount(account, session.realmId, session.access_token)
             if(success){
                 redirect(action: 'list')
             }else{
@@ -63,7 +63,7 @@ class CompanyController {
                     it.value()
                 },accountSubTypeList: AccountSubTypeEnum.values().collect {
                     it.value()
-                }, activeList: [true, false], error: "remote API server issue, try later..."]
+                }, activeList: [true, false], error: message]
             }
         }
     }

@@ -88,14 +88,12 @@ class CompanyService {
 
         }
 
-        println httpHelper.getResult(response)
+        def message = httpHelper.getResult(response)
 
         if (response.getStatusLine().getStatusCode() == 200) {
-            println "update save success"
-            return true
+            return [true,message]
         } else {
-            println "update save failed"
-            return false
+            return [false,message]
         }
 
     }
