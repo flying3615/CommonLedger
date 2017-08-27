@@ -1,5 +1,9 @@
 import groovyx.net.http.RESTClient
 import org.apache.http.HttpResponse
+import org.apache.http.client.HttpClient
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.entity.StringEntity
+import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.tomcat.util.codec.binary.Base64
 import org.grails.web.json.JSONObject
 
@@ -30,6 +34,35 @@ class HttpHelper {
         } else {
             println "Cannot get discovery api"
         }
+    }
+
+    def getResult(HttpResponse response) throws IOException {
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
+        StringBuffer result = new StringBuffer()
+        String line = ""
+        while ((line = rd.readLine()) != null) {
+            result.append(line)
+        }
+        return result
+    }
+
+    /**
+     * use HttpClient to post raw json string
+     * @param ur
+     * @param json
+     * @param realmId
+     * @param accessToken
+     * @return
+     */
+    def postRawJson(String url,String json, String accessToken) {
+        HttpClient CLIENT = HttpClientBuilder.create().build()
+        StringEntity entity = new StringEntity(json)
+        HttpPost httpPost = new HttpPost(url)
+        httpPost.setEntity(entity)
+        httpPost.setHeader("Accept", "application/json")
+        httpPost.setHeader("Content-type", "application/json")
+        httpPost.setHeader("Authorization", "Bearer ${accessToken}")
+        return CLIENT.execute(httpPost)
     }
 
     def getCSRFToken() {

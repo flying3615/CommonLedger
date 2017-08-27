@@ -1,6 +1,7 @@
 package commonledger
 
 import com.intuit.ipp.data.Account
+import com.intuit.ipp.data.AccountSubTypeEnum
 import com.intuit.ipp.data.AccountTypeEnum
 import org.apache.commons.lang.StringUtils
 
@@ -27,7 +28,9 @@ class CompanyController {
         } else {
             account = new Account()
         }
-        render view: 'accountForm', model: [account: account, accountTpyeList: AccountTypeEnum.values().collect {
+        render view: 'accountForm', model: [account: account, accountTypeList: AccountTypeEnum.values().collect {
+            it.value()
+        },accountSubTypeList: AccountSubTypeEnum.values().collect {
             it.value()
         }, activeList: [true, false], error: params.error]
     }
@@ -52,8 +55,16 @@ class CompanyController {
                 it.value()
             }, activeList: [true, false], error: error_message])
         } else {
-            companyService.saveOrUpdateAccount(account, session.realmId, session.access_token)
-            redirect(action: 'list')
+            def success = companyService.saveOrUpdateAccount(account, session.realmId, session.access_token)
+            if(success){
+                redirect(action: 'list')
+            }else{
+                render view: 'accountForm', model: [account: account, accountTypeList: AccountTypeEnum.values().collect {
+                    it.value()
+                },accountSubTypeList: AccountSubTypeEnum.values().collect {
+                    it.value()
+                }, activeList: [true, false], error: "remote API server issue, try later..."]
+            }
         }
     }
 

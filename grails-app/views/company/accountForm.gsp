@@ -23,7 +23,7 @@
 
     <div class="form-group">
         <label for="accType">Account Type</label>
-        <g:select id="accType" name="accType" value="${account?.accountType?.value()}" from="${accountTpyeList}"/>
+        <g:select id="accType" name="accType" value="${account?.accountType?.value()}" from="${accountTypeList}"/>
     </div>
 
     <div class="form-group">
@@ -33,7 +33,8 @@
 
     <div class="form-group">
         <label for="accountSubType">Account SubType</label>
-        <g:textField id="accountSubType" class="form-control" name="accountSubType" value="${account?.accountSubType}"/>
+        <g:select id="accountSubType" name="accountSubType" value="${account?.accountSubType}" from="${accountSubTypeList}"/>
+
     </div>
 
     <div class="form-group">
