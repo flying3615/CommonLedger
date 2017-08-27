@@ -33,6 +33,7 @@ class CompanyService {
                 return [error: true, message: "http response code is not 200"]
             }
         } catch (ex) {
+            println ex.stackTrace
             return [error: true, message: ex.toString()]
         }
 

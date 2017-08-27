@@ -12,7 +12,9 @@ class CompanyController {
     def index() {}
 
     def list() {
-        def queryResult = companyService.query(params.query, session.realmId, session.access_token)
+
+        def queryStr = params.query ?: "select * from account"
+        def queryResult = companyService.query(queryStr, session.realmId, session.access_token)
         if (!queryResult.error) {
             render view: 'list', model: [queryResp: queryResult.message?.Account]
         } else {
@@ -56,6 +58,7 @@ class CompanyController {
             }, activeList: [true, false], error: error_message])
         } else {
             def (success,message) = companyService.saveOrUpdateAccount(account, session.realmId, session.access_token)
+            println("after save update...$success  $message")
             if(success){
                 redirect(action: 'list')
             }else{

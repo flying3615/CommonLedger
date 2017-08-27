@@ -9,7 +9,6 @@
 
 <body>
 
-
 <div class="svg" role="presentation">
     <div class="grails-logo-container">
         <asset:image src="grails-cupsonly-logo-white.svg" class="grails-logo"/>
@@ -27,16 +26,21 @@
             this application, click on each to execute its default action:
         </p>
 
-        <div id="controllers" role="navigation">
-            <h2>Available Controllers:</h2>
-            <ul>
-                <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName }}">
-                    <li class="controller">
-                        <g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link>
-                    </li>
-                </g:each>
-            </ul>
+        <div class="col-md-offset-5 col-md-2">
+            <a href="/company/index" role="button" class="btn btn-primary">Accounts Management</a>
+            <br>
+            <div id="controllers" role="navigation">
+                <h2>Available Controllers:</h2>
+                <ul>
+                    <g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName }}">
+                        <li class="controller">
+                            <g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link>
+                        </li>
+                    </g:each>
+                </ul>
+            </div>
         </div>
+
     </section>
 </div>
 
