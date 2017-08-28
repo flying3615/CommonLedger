@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Page Not Found</title>
+    <title>Company Info</title>
     <meta name="layout" content="main">
 </head>
 

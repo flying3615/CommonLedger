@@ -16,7 +16,7 @@
 </div>
 
 <div id="content" role="main">
-    <section class="row colset-2-its" style="position: absolute; left: 15%;">
+    <section class="row colset-2-its" style="position: absolute; left: 10%;">
         <h1>Welcome to Grails</h1>
 
         <p>
