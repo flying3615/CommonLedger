@@ -7,7 +7,7 @@
 
 <body>
 <div class="row">
-    <div class="col-md-offset-1 col-md-10">
+    <div class="col-md-offset-1 col-md-10" style="position: absolute">
         <div class="row">
             <div class="col-md-5">
                 <strong class="h3">Company's Accounts List</strong>

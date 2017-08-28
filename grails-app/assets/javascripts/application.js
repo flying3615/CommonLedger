@@ -17,5 +17,10 @@ if (typeof jQuery !== 'undefined') {
         }).ajaxStop(function() {
             $(this).fadeOut();
         });
+
+        particlesJS.load('particles-js', '/assets/particles.json', function() {
+            console.log('callback - particles.js config loaded');
+        });
+
     })(jQuery);
 }
