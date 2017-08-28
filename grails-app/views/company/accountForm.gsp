@@ -14,7 +14,7 @@
     </g:if>
 
 
-    <g:form name="accountForm" url="[controller: 'company', action: 'saveOrUpdateAccount']">
+    <g:form name="accountForm" url="[controller: 'company', action: 'saveOrUpdateAccount']" style="position: absolute; left: 35%">
         <g:hiddenField name="id" value="${account?.id}"/>
 
         <div class="form-group row">

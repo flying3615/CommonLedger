@@ -48,7 +48,7 @@
     </div>
 </div>
 
-<div id="particles-js" class="container">
+<div id="particles-js" class="container" style="position: relative">
     <g:layoutBody/>
 </div>
 

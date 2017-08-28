@@ -52,9 +52,11 @@ class CompanyController {
         }
 
         if (StringUtils.isNotEmpty(error_message)) {
-            render(view: 'accountForm', model: [account: account, accountTpyeList: AccountTypeEnum.values().collect {
+            render view: 'accountForm', model: [account: account, accountTypeList: AccountTypeEnum.values().collect {
                 it.value()
-            }, activeList: [true, false], error: error_message])
+            },accountSubTypeList: AccountSubTypeEnum.values().collect {
+                it.value()
+            }, activeList: [true, false], error: error_message]
         } else {
             def (success,message) = companyService.saveOrUpdateAccount(account, session.realmId, session.access_token)
             println("after save update...$success  $message")
