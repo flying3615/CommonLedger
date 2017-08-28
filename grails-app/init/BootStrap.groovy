@@ -6,6 +6,14 @@ import org.apache.http.impl.client.HttpClientBuilder
 class BootStrap {
 
     def init = { servletContext ->
+        environments {
+            production {
+                servletContext.setAttribute("env", "prod")
+            }
+            development {
+                servletContext.setAttribute("env", "dev")
+            }
+        }
     }
     def destroy = {
     }
